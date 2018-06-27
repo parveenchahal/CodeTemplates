@@ -35,7 +35,25 @@ class CodeTemplates {
             System.out.println();
         }
     }
-    
+
+    public static void printMatrix(long[][] matrix) {
+        for (long[] col : matrix) {
+            for (long x : col) {
+                System.out.print(x + "\t");
+            }
+            System.out.println();
+        }
+    }
+
+    public static void printMatrix(char[][] matrix) {
+        for (char[] col : matrix) {
+            for (char x : col) {
+                System.out.print(x + "\t");
+            }
+            System.out.println();
+        }
+    }
+
     public static int max(int[] arr) {
         return Arrays.stream(arr).max().getAsInt();
     }
