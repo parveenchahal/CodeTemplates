@@ -58,7 +58,7 @@ class CodeTemplates {
         return toDoubleArrFromStringArr(br.readLine().split(" "));
     }
 
-    public static String readLineArrayFromLine(BufferedReader br) throws IOException {
+    public static String readLineFromLine(BufferedReader br) throws IOException {
         return br.readLine();
     }
 
