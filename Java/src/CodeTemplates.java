@@ -27,6 +27,34 @@ class CodeTemplates {
 //==============================================================================================================================
 //Methods
 //==============================================================================================================================
+	public static void println(Object... obj) {
+        String x = "{";
+        for (Object o : obj) {
+            x += o.toString() + ", ";
+        }
+        if (x.length() > 1) {
+            System.out.println(x.substring(0, x.length() - 2) + "}");
+        } else {
+            System.out.println(x + "}");
+        }
+    }
+
+    public static void printArray(int[] arr) {
+        System.out.print(Arrays.toString(arr));
+    }
+
+    public static void printArray(char[] arr) {
+        System.out.print(Arrays.toString(arr));
+    }
+
+    public static void printArray(long[] arr) {
+        System.out.print(Arrays.toString(arr));
+    }
+
+    public static void printArray(double[] arr) {
+        System.out.print(Arrays.toString(arr));
+    }
+
     public static void printMatrix(int[][] matrix) {
         for (int[] col : matrix) {
             for (int x : col) {
