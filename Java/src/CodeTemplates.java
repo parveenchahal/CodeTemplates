@@ -28,14 +28,14 @@ class CodeTemplates {
 //Methods
 //==============================================================================================================================
     public static void println(Object... obj) {
-        String x = "{";
+        String x = "";
         for (Object o : obj) {
             x += o.toString() + ", ";
         }
-        if (x.length() > 1) {
-            System.out.println(x.substring(0, x.length() - 2) + "}");
+        if (x.length() > 0) {
+            System.out.println(x.substring(0, x.length() - 2));
         } else {
-            System.out.println(x + "}");
+            System.out.println(x);
         }
     }
 
