@@ -1,4 +1,7 @@
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,6 +30,38 @@ class CodeTemplates {
 //==============================================================================================================================
 //Methods
 //==============================================================================================================================
+    public static BufferedReader getBufferedReaderInstance() throws IOException {
+        return new BufferedReader(new InputStreamReader(System.in));
+    }
+
+    public static int readIntegerFromLine(BufferedReader br) throws IOException {
+        return Integer.parseInt(br.readLine());
+    }
+
+    public static long readLongFromLine(BufferedReader br) throws IOException {
+        return Long.parseLong(br.readLine());
+    }
+
+    public static double readDoubleFromLine(BufferedReader br) throws IOException {
+        return Double.parseDouble(br.readLine());
+    }
+
+    public static int[] readIntegerArrayFromLine(BufferedReader br) throws IOException {
+        return toIntArrFromStringArr(br.readLine().split(" "));
+    }
+
+    public static long[] readLongArrayFromLine(BufferedReader br) throws IOException {
+        return toLongArrFromStringArr(br.readLine().split(" "));
+    }
+
+    public static double[] readDoubleArrayFromLine(BufferedReader br) throws IOException {
+        return toDoubleArrFromStringArr(br.readLine().split(" "));
+    }
+
+    public static String readLineArrayFromLine(BufferedReader br) throws IOException {
+        return br.readLine();
+    }
+
     public static void println(Object... obj) {
         String x = "";
         for (Object o : obj) {
@@ -120,6 +155,10 @@ class CodeTemplates {
 
     public static long[] toLongArrFromStringArr(String[] arr) {
         return Arrays.stream(arr).mapToLong(Long::parseLong).toArray();
+    }
+
+    public static double[] toDoubleArrFromStringArr(String[] arr) {
+        return Arrays.stream(arr).mapToDouble(Double::parseDouble).toArray();
     }
 
     public static void reverse(int[] arr) {
