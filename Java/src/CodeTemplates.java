@@ -161,6 +161,10 @@ class CodeTemplates {
         return Arrays.stream(arr).mapToDouble(Double::parseDouble).toArray();
     }
 
+    public static void reverse(List<?> list) {
+        Collections.sort(list, Collections.reverseOrder());
+    }
+
     public static void reverse(int[] arr) {
         int N = arr.length;
         int lastIndex = N - 1;
@@ -707,6 +711,16 @@ class CodeTemplates {
             return map.get(u);
         }
 
+        public void reverseAllDirections() {
+            Graph newGraph = new Graph();
+            for (Map.Entry<String, List<Edge>> entry : map.entrySet()) {
+                List<Graph.Edge> list = entry.getValue();
+                for (Edge edge : list) {
+                    newGraph.addEdge(new Edge(edge.v, edge.u, edge.distance));
+                }
+            }
+            this.map = newGraph.map;
+        }
     }
 
     public static class Dijkstra {
