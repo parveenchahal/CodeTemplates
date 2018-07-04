@@ -2,6 +2,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -114,6 +116,39 @@ class CodeTemplates {
                 System.out.print(x + "\t");
             }
             System.out.println();
+        }
+    }
+
+    public static String factorial(int n) {
+        if (n >= 0) {
+            BigInteger one = new BigInteger("1");
+            BigInteger N = new BigInteger(Integer.toString(n));
+            BigInteger factorial = new BigInteger(N.toString());
+            N = N.subtract(one);
+            while (N.compareTo(one) > 0) {
+                factorial = factorial.multiply(N);
+                N = N.subtract(one);
+            }
+            return factorial.toString();
+        } else {
+            throw new InvalidParameterException("n should be greater than equal to 0");
+        }
+    }
+
+    public static String nCr(int n, int r) {
+        if (n >= r && r > 0) {
+            return new BigInteger(nPr(n, r)).divide(new BigInteger(factorial(r))).toString();
+        } else {
+            throw new InvalidParameterException("n and r should be positive and n should be greater than equal to r");
+        }
+
+    }
+
+    public static String nPr(int n, int r) {
+        if (n >= r && r > 0) {
+            return new BigInteger(factorial(n)).divide(new BigInteger(factorial(n - r))).toString();
+        } else {
+            throw new InvalidParameterException("n and r should be positive and n should be greater than equal to r");
         }
     }
 
