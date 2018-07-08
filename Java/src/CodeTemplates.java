@@ -67,7 +67,11 @@ class CodeTemplates {
     public static void println(Object... obj) {
         String x = "";
         for (Object o : obj) {
-            x += o.toString() + ", ";
+            if (o != null) {
+                x += o.toString() + ", ";
+            } else {
+                x += "null, ";
+            }
         }
         if (x.length() > 0) {
             System.out.println(x.substring(0, x.length() - 2));
@@ -325,136 +329,28 @@ class CodeTemplates {
 
     }
 
-    public static class PowerSet {
+    public static class PowerSet<E> {
 
-        public static List<Set<Integer>> get(int[] arr) {
+        public List<Set<E>> get(E[] arr) {
             long nSets = 0;
-            for (int i = 0; i < arr.length; i++) {
+            int N = arr.length;
+            for (int i = 0; i < N; i++) {
                 nSets = (nSets << 1) | 1;
             }
-            ArrayList<Set<Integer>> result = new ArrayList<>();
+            ArrayList<Set<E>> result = new ArrayList<>();
             result.add(new HashSet<>());
             for (long i = 1; i <= nSets; i++) {
-                Set<Integer> s = new HashSet<>();
+                Set<E> s = new HashSet<>();
                 long p = i;
                 for (int j = 0; p > 0; j++, p >>>= 1) {
                     if ((p & 1) > 0) {
                         s.add(arr[j]);
                     }
                 }
-                result.sort((Set<Integer> o1, Set<Integer> o2) -> o1.size() - o2.size());
+                result.sort((Set<E> o1, Set<E> o2) -> o1.size() - o2.size());
                 result.add(s);
             }
             return result;
-        }
-    }
-
-    public static class Treap< E extends Comparable< E>, P extends Comparable< P>> {
-
-        private class Node {
-
-            E key;
-            P priority;
-            Node left, right;
-
-            public Node(E key, P priority) {
-                this.key = key;
-                this.priority = priority;
-                this.left = null;
-                this.right = null;
-            }
-
-            public int compareKey(Node o) {
-                return key.compareTo(o.key);
-            }
-
-            public int comparePriority(Node o) {
-                return priority.compareTo(o.priority);
-            }
-
-            @Override
-            public String toString() {
-                return "Key : " + key + " ----> LC : " + (left != null ? left.key : "null") + ", RC : " + (right != null ? right.key : "null") + ", Priority : " + priority;
-            }
-        }
-
-        private boolean isMinHeap;
-        private Node root;
-
-        public Treap(boolean isMinHeap) {
-            this.isMinHeap = isMinHeap;
-            this.root = null;
-        }
-
-        public boolean isMinHeap() {
-            return isMinHeap;
-        }
-
-        public void insert(E key, P priority) {
-            root = insert(root, new Node(key, priority));
-        }
-
-        private Node insert(Node root, Node newnode) {
-            if (root == null) {
-                return newnode;
-            }
-            int cmp = newnode.compareKey(root);
-            if (cmp < 0) {
-                root.left = insert(root.left, newnode);
-            } else if (cmp > 0) {
-                root.right = insert(root.right, newnode);
-            }
-            root = heapify(root);
-            return root;
-        }
-
-        private Node heapify(Node node) {
-            Node left = node.left;
-            Node right = node.right;
-            if (isMinHeap) {
-                if (left != null && node.comparePriority(left) > 0) {
-                    return rightRotation(node);
-                } else if (right != null && node.comparePriority(right) > 0) {
-                    return leftRotation(node);
-                }
-            } else {
-                if (left != null && node.comparePriority(left) < 0) {
-                    return rightRotation(node);
-                } else if (right != null && node.comparePriority(right) < 0) {
-                    return leftRotation(node);
-                }
-            }
-            return node;
-        }
-
-        private Node leftRotation(Node A) {
-            Node C = A.right;
-            Node temp = C.left;
-            A.right = temp;
-            C.left = A;
-            return C;
-        }
-
-        private Node rightRotation(Node A) {
-            Node B = A.left;
-            Node temp = B.right;
-            A.left = temp;
-            B.right = A;
-            return B;
-        }
-
-        public void preOrder() {
-            preOrder(root);
-            System.out.println();
-        }
-
-        private void preOrder(Node ptr) {
-            if (ptr == null) {
-                return;
-            }
-            System.out.println(ptr);
-            preOrder(ptr.left);
-            preOrder(ptr.right);
         }
     }
 
@@ -676,50 +572,49 @@ class CodeTemplates {
 
     }
 
-    public static class Graph {
+    public static class Graph<E, P> {
 
-        private Map<String, List<Edge>> map;
+        private Map<E, List<Edge>> map;
 
-        static public class Edge {
+        static public class Edge<E, P> {
 
-            private String u, v;
-            private int distance;
+            private E u, v;
+            private P param;
 
-            public String getU() {
+            public E getU() {
                 return u;
             }
 
-            public String getV() {
+            public E getV() {
                 return v;
             }
 
-            public int getDistance() {
-                return distance;
+            public P getParams() {
+                return param;
             }
 
-            public Edge(String u, String v, int distance) {
+            public Edge(E u, E v, P params) {
                 this.u = u;
                 this.v = v;
-                this.distance = distance;
+                this.param = params;
             }
 
-            public Edge(Edge edge) {
+            public Edge(Edge<E, P> edge) {
                 this.u = edge.u;
                 this.v = edge.v;
-                this.distance = edge.distance;
+                this.param = edge.param;
             }
 
-            public Edge(Edge edge, int distance) {
+            public Edge(Edge<E, P> edge, P params) {
                 this.u = edge.u;
                 this.v = edge.v;
-                this.distance = distance;
+                this.param = params;
             }
 
             @Override
             public String toString() {
-                return "{u=" + u + ", v=" + v + ", distance=" + distance + "}";
+                return "{u=" + u.toString() + ", v=" + v.toString() + ", param=" + param.toString() + "}";
             }
-
         }
 
         public Graph() {
@@ -731,7 +626,7 @@ class CodeTemplates {
             return map.toString();
         }
 
-        public void addEdge(Edge edge) {
+        public void addEdge(Edge<E, P> edge) {
             List<Edge> list = map.get(edge.u);
             if (list != null) {
                 list.add(edge);
@@ -742,177 +637,20 @@ class CodeTemplates {
             }
         }
 
-        public List<Edge> getConnections(String u) {
+        public List<Edge> getConnections(E u) {
             return map.get(u);
         }
 
         public void reverseAllDirections() {
-            Graph newGraph = new Graph();
-            for (Map.Entry<String, List<Edge>> entry : map.entrySet()) {
+            Graph<E, P> newGraph = new Graph();
+            for (Map.Entry<E, List<Edge>> entry : map.entrySet()) {
                 List<Graph.Edge> list = entry.getValue();
-                for (Edge edge : list) {
-                    newGraph.addEdge(new Edge(edge.v, edge.u, edge.distance));
-                }
+                list.forEach((edge) -> {
+                    newGraph.addEdge(new Edge(edge.v, edge.u, edge.param));
+                });
             }
             this.map = newGraph.map;
         }
-    }
-
-    public static class Dijkstra {
-
-        private static class HeapMap extends PriorityQueue<Node> {
-
-            private Set<String> set;
-
-            public HeapMap() {
-                set = new HashSet<>();
-            }
-
-            @Override
-            public boolean contains(Object o) {
-                try {
-                    if (Node.class == o.getClass()) {
-                        return set.contains(o);
-                    } else {
-                        throw new Exception("Object is not instance of class Node");
-                    }
-                } catch (Exception e) {
-                    System.err.println(e);
-                }
-                return false;
-            }
-
-            @Override
-            public boolean add(Node node) {
-                try {
-                    if (!this.contains(node)) {
-                        boolean done = super.add(node) && set.add(node.v);
-                        if (!done) {
-                            set.remove(node.v);
-                            remove(node);
-                        }
-                        return done;
-                    } else {
-                        throw new Exception("Already present in HeapMap");
-                    }
-                } catch (Exception e) {
-                    System.err.println(e);
-                }
-                return false;
-            }
-
-            @Override
-            public boolean remove(Object o) {
-                try {
-                    if (o.getClass() == Node.class) {
-                        boolean done = super.remove(o) && set.remove(o);
-                        return done;
-                    } else {
-                        throw new Exception("Object is not of same type");
-                    }
-                } catch (Exception e) {
-                    System.err.println(e);
-                }
-                return false;
-            }
-
-            public boolean decrease(Node node) {
-                try {
-                    if (set.contains(node.v)) {
-                        for (Node e : this) {
-                            if (e.equals(node)) {
-                                if (e.distance > node.distance) {
-                                    remove(node);
-                                    add(node);
-                                    return true;
-                                }
-                                return false;
-                            }
-                        }
-                    } else {
-                        throw new Exception("node doesn't present in HeapMap");
-                    }
-                } catch (Exception e) {
-                    System.err.println(e);
-                }
-                return false;
-            }
-        }
-
-        private static class Node implements Comparable<Node> {
-
-            String v;
-            int distance;
-
-            public Node(String v, int distance) {
-                this.v = v;
-                this.distance = distance;
-            }
-
-            @Override
-            public boolean equals(Object obj) {
-                if (this == obj) {
-                    return true;
-                }
-                if (obj == null) {
-                    return false;
-                }
-                if (getClass() != obj.getClass()) {
-                    return false;
-                }
-                final Node other = (Node) obj;
-                if (!Objects.equals(this.v, other.v)) {
-                    return false;
-                }
-                return true;
-            }
-
-            @Override
-            public int compareTo(Node o) {
-                return this.distance - o.distance;
-            }
-
-        }
-
-        public List<String> find(Graph graph, String src, String dest) {
-            Map<String, String> parents = new HashMap<>();
-            HeapMap heap = new HeapMap();
-            Set<String> visited = new HashSet<>();
-            heap.add(new Node(src, 0));
-            parents.put(src, null);
-            Node parent = null;
-            while (heap.size() > 0) {
-                parent = heap.poll();
-                if (parent.equals(dest)) {
-                    break;
-                }
-                visited.add(parent.v);
-                for (Graph.Edge edge : graph.getConnections(parent.v)) {
-                    Node next = new Node(edge.getV(), parent.distance + edge.getDistance());
-                    if (!visited.contains(edge.getV())) {
-                        if (heap.contains(next)) {
-                            if (heap.decrease(next)) {
-                                parents.put(next.v, parent.v);
-                            }
-                        } else {
-                            heap.add(next);
-                            parents.put(next.v, parent.v);
-                        }
-                    }
-                }
-            }
-            List<String> path = new ArrayList<>();
-            if (visited.contains(dest)) {
-                String p = dest;
-                while (p != null) {
-                    path.add(p);
-                    p = parents.get(p);
-                }
-            }
-            Collections.reverse(path);
-            return path;
-        }
-
     }
 
     public static class HeapMap<E> {
@@ -1112,7 +850,7 @@ class CodeTemplates {
 
         @Override
         public String toString() {
-            return "(x : " + this.x + ", Y : " + this.y + ")";
+            return "(x : " + this.x + ", y : " + this.y + ")";
         }
     }
 }
