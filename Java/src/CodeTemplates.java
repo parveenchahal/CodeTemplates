@@ -574,7 +574,7 @@ class CodeTemplates {
 
     public static class Graph<E, P> {
 
-        private Map<E, List<Edge>> map;
+        private Map<E, List<Edge<E, P>>> map;
 
         static public class Edge<E, P> {
 
@@ -627,7 +627,7 @@ class CodeTemplates {
         }
 
         public void addEdge(Edge<E, P> edge) {
-            List<Edge> list = map.get(edge.u);
+            List<Edge<E, P>> list = map.get(edge.u);
             if (list != null) {
                 list.add(edge);
             } else {
@@ -637,14 +637,14 @@ class CodeTemplates {
             }
         }
 
-        public List<Edge> getConnections(E u) {
+        public List<Edge<E, P>> getConnections(E u) {
             return map.get(u);
         }
 
         public void reverseAllDirections() {
             Graph<E, P> newGraph = new Graph();
-            for (Map.Entry<E, List<Edge>> entry : map.entrySet()) {
-                List<Graph.Edge> list = entry.getValue();
+            for (Map.Entry<E, List<Edge<E, P>>> entry : map.entrySet()) {
+                List<Graph.Edge<E, P>> list = entry.getValue();
                 list.forEach((edge) -> {
                     newGraph.addEdge(new Edge(edge.v, edge.u, edge.param));
                 });
@@ -713,6 +713,10 @@ class CodeTemplates {
             elementData[size] = e;
             siftUp(size);
             size++;
+        }
+        
+        public boolean contains(E e) {
+            return map.containsKey(e);
         }
 
         public E remove() {
