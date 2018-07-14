@@ -655,80 +655,57 @@ class CodeTemplates {
 
     public static class HeapMap<E> {
 
-        private Map<Object, Integer> map;
+        private Map<E, Integer> map;
 
-        private Object[] elementData;
-
-        private final int INITIAL_CAPACITY = 50;
-
-        private final int GROW_CAPACITY = 100;
-
-        private final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
+        final private List<E> list;
 
         private final Comparator<? super E> comparator;
 
-        private int size = 0;
-
         @Override
         public String toString() {
-            return Arrays.toString(Arrays.copyOf(elementData, size)) + "\n" + map.toString();
+            return list.toString() + "\n" + map.toString();
         }
 
         public HeapMap() {
-            this.elementData = new Object[INITIAL_CAPACITY];
+            this.list = new ArrayList<>();
             this.comparator = null;
             this.map = new HashMap<>();
         }
 
         public HeapMap(Comparator<? super E> comparator) {
-            this.elementData = new Object[INITIAL_CAPACITY];
+            this.list = new ArrayList<>();
             this.comparator = comparator;
             this.map = new HashMap<>();
         }
 
         public int size() {
-            return size;
+            return list.size();
         }
 
         public boolean isEmpty() {
-            return size <= 0;
-        }
-
-        private void grow() {
-            int oldLength = elementData.length;
-            if (oldLength == MAX_ARRAY_SIZE) {
-                throw new ArrayIndexOutOfBoundsException("Can't allocate continuous memory any more");
-            }
-            int newLength = oldLength + GROW_CAPACITY;
-            if (newLength > MAX_ARRAY_SIZE) {
-                newLength = MAX_ARRAY_SIZE;
-            }
-            elementData = Arrays.copyOf(elementData, newLength);
+            return size() <= 0;
         }
 
         public void insert(E e) {
-            if (elementData.length <= size) {
-                grow();
+            if (e != null) {
+                list.add(e);
+                siftUp(list.size() - 1);
             }
-            elementData[size] = e;
-            siftUp(size);
-            size++;
         }
-        
+
         public boolean contains(E e) {
             return map.containsKey(e);
         }
 
         public E remove() {
-            if (size <= 0) {
+            if (list.size() <= 0) {
                 return null;
             }
-            Object removedElement = elementData[0];
+            E removedElement = list.get(0);
             map.remove(removedElement);
-            Object lastElement = elementData[--size];
-            elementData[size] = null;
-            if (size > 0) {
-                elementData[0] = lastElement;
+            E lastElement = list.remove(list.size() - 1);
+            if (list.size() > 0) {
+                list.set(0, lastElement);
                 siftDown(0);
             }
             return (E) removedElement;
@@ -749,8 +726,8 @@ class CodeTemplates {
         }
 
         private void change(int index, E newE) {
-            int cmp = compare(newE, (E) elementData[index]);
-            elementData[index] = newE;
+            int cmp = compare(newE, list.get(index));
+            list.set(index, newE);
             if (cmp < 0) {
                 siftUp(index);
             } else if (cmp > 0) {
@@ -779,47 +756,47 @@ class CodeTemplates {
         }
 
         private void siftUp(int index) {
-            Object temp = elementData[index];
+            E temp = list.get(index);
             while (index > 0) {
                 int parent = iParent(index);
-                if (compare((E) temp, ((E) elementData[parent])) >= 0) {
+                if (compare(temp, list.get(parent)) >= 0) {
                     break;
                 }
-                elementData[index] = elementData[parent];
-                map.put(elementData[parent], index);
+                list.set(index, list.get(parent));
+                map.put(list.get(parent), index);
                 index = parent;
             }
-            elementData[index] = temp;
+            list.set(index, temp);
             map.put(temp, index);
         }
 
         private void siftDown(int index) {
-            if (size < 2) {
+            if (list.size() < 2) {
                 return;
             }
-            int lastParent = iParent(size - 1);
-            Object temp = elementData[index];
+            int lastParent = iParent(list.size() - 1);
+            E temp = list.get(index);
             while (index <= lastParent) {
                 int childIndex = iLeftChild(index);
-                E child = (E) elementData[childIndex];
+                E child = (E) list.get(childIndex);
                 int rightIndex = iRightChild(index);
-                if (rightIndex < size && compare(child, (E) elementData[rightIndex]) > 0) {
-                    child = (E) elementData[rightIndex];
+                if (rightIndex < list.size() && compare(child, list.get(rightIndex)) > 0) {
+                    child = list.get(rightIndex);
                     childIndex = rightIndex;
                 }
                 if (compare((E) temp, child) <= 0) {
                     break;
                 }
-                elementData[index] = child;
+                list.set(index, child);
                 map.put(child, index);
                 index = childIndex;
             }
-            elementData[index] = temp;
+            list.set(index, temp);
             map.put(temp, index);
         }
 
         private void heapify() {
-            for (int i = iParent(size - 1); i >= 0; i--) {
+            for (int i = iParent(list.size() - 1); i >= 0; i--) {
                 siftDown(i);
             }
         }
