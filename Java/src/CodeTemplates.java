@@ -26,40 +26,49 @@ class CodeTemplates {
     public static int MOD = ((int) 1e9 + 7);
     public static double PI = Math.PI;
     public static Comparator<Integer> reverseIntegerComparator = (Integer o1, Integer o2) -> o2 - o1;
+    public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 //==============================================================================================================================
-//Methods
+//Input/Output methods
 //==============================================================================================================================
-    public static BufferedReader getBufferedReaderInstance() throws IOException {
-        return new BufferedReader(new InputStreamReader(System.in));
-    }
-
-    public static int readIntegerFromLine(BufferedReader br) throws IOException {
+    public static int readIntegerFromLine() throws IOException {
         return Integer.parseInt(br.readLine());
     }
 
-    public static long readLongFromLine(BufferedReader br) throws IOException {
+    public static long readLongFromLine() throws IOException {
         return Long.parseLong(br.readLine());
     }
 
-    public static double readDoubleFromLine(BufferedReader br) throws IOException {
+    public static double readDoubleFromLine() throws IOException {
         return Double.parseDouble(br.readLine());
     }
 
-    public static int[] readIntegerArrayFromLine(BufferedReader br) throws IOException {
+    public static int[] readIntegerArrayFromLine() throws IOException {
         return toIntArrFromStringArr(br.readLine().split(" "));
     }
 
-    public static long[] readLongArrayFromLine(BufferedReader br) throws IOException {
+    public static long[] readLongArrayFromLine() throws IOException {
         return toLongArrFromStringArr(br.readLine().split(" "));
     }
 
-    public static double[] readDoubleArrayFromLine(BufferedReader br) throws IOException {
+    public static double[] readDoubleArrayFromLine() throws IOException {
         return toDoubleArrFromStringArr(br.readLine().split(" "));
     }
 
-    public static String readLineFromLine(BufferedReader br) throws IOException {
+    public static String readLineFromLine() throws IOException {
         return br.readLine();
+    }
+
+    public static int[] toIntArrFromStringArr(String[] arr) {
+        return Arrays.stream(arr).mapToInt(Integer::parseInt).toArray();
+    }
+
+    public static long[] toLongArrFromStringArr(String[] arr) {
+        return Arrays.stream(arr).mapToLong(Long::parseLong).toArray();
+    }
+
+    public static double[] toDoubleArrFromStringArr(String[] arr) {
+        return Arrays.stream(arr).mapToDouble(Double::parseDouble).toArray();
     }
 
     public static void println(Object... obj) {
@@ -121,39 +130,9 @@ class CodeTemplates {
         }
     }
 
-    public static String factorial(int n) {
-        if (n >= 0) {
-            BigInteger one = new BigInteger("1");
-            BigInteger N = new BigInteger(Integer.toString(n));
-            BigInteger factorial = new BigInteger(N.toString());
-            N = N.subtract(one);
-            while (N.compareTo(one) > 0) {
-                factorial = factorial.multiply(N);
-                N = N.subtract(one);
-            }
-            return factorial.toString();
-        } else {
-            throw new InvalidParameterException("n should be greater than equal to 0");
-        }
-    }
-
-    public static String nCr(int n, int r) {
-        if (n >= r && r > 0) {
-            return new BigInteger(nPr(n, r)).divide(new BigInteger(factorial(r))).toString();
-        } else {
-            throw new InvalidParameterException("n and r should be positive and n should be greater than equal to r");
-        }
-
-    }
-
-    public static String nPr(int n, int r) {
-        if (n >= r && r > 0) {
-            return new BigInteger(factorial(n)).divide(new BigInteger(factorial(n - r))).toString();
-        } else {
-            throw new InvalidParameterException("n and r should be positive and n should be greater than equal to r");
-        }
-    }
-
+//==============================================================================================================================
+//Max/Min methods
+//==============================================================================================================================
     public static int max(int[] arr) {
         return Arrays.stream(arr).max().getAsInt();
     }
@@ -186,18 +165,9 @@ class CodeTemplates {
         return Math.min(a, Math.min(b, c));
     }
 
-    public static int[] toIntArrFromStringArr(String[] arr) {
-        return Arrays.stream(arr).mapToInt(Integer::parseInt).toArray();
-    }
-
-    public static long[] toLongArrFromStringArr(String[] arr) {
-        return Arrays.stream(arr).mapToLong(Long::parseLong).toArray();
-    }
-
-    public static double[] toDoubleArrFromStringArr(String[] arr) {
-        return Arrays.stream(arr).mapToDouble(Double::parseDouble).toArray();
-    }
-
+//==============================================================================================================================
+//Reverse methods
+//==============================================================================================================================
     public static void reverse(List<?> list) {
         Collections.sort(list, Collections.reverseOrder());
     }
@@ -256,6 +226,46 @@ class CodeTemplates {
         return sb.toString();
     }
 
+//==============================================================================================================================
+//Maths methods
+//==============================================================================================================================
+    public static double logNWithBase(double N, double base) {
+        return Math.log(N) / Math.log(base);
+    }
+
+    public static String factorial(int n) {
+        if (n >= 0) {
+            BigInteger one = new BigInteger("1");
+            BigInteger N = new BigInteger(Integer.toString(n));
+            BigInteger factorial = new BigInteger(N.toString());
+            N = N.subtract(one);
+            while (N.compareTo(one) > 0) {
+                factorial = factorial.multiply(N);
+                N = N.subtract(one);
+            }
+            return factorial.toString();
+        } else {
+            throw new InvalidParameterException("n should be greater than equal to 0");
+        }
+    }
+
+    public static String nCr(int n, int r) {
+        if (n >= r && r > 0) {
+            return new BigInteger(nPr(n, r)).divide(new BigInteger(factorial(r))).toString();
+        } else {
+            throw new InvalidParameterException("n and r should be positive and n should be greater than equal to r");
+        }
+
+    }
+
+    public static String nPr(int n, int r) {
+        if (n >= r && r > 0) {
+            return new BigInteger(factorial(n)).divide(new BigInteger(factorial(n - r))).toString();
+        } else {
+            throw new InvalidParameterException("n and r should be positive and n should be greater than equal to r");
+        }
+    }
+
     public static int gcd(int a, int b) {
         if (a == 0 || b == 0) {
             return 0;
@@ -300,10 +310,6 @@ class CodeTemplates {
                 return lcm;
             }
         }
-    }
-
-    public static double logNWithBase(double N, double base) {
-        return Math.log(N) / Math.log(base);
     }
 
 //==============================================================================================================================
