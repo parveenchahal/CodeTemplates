@@ -351,7 +351,6 @@ class CodeTemplates {
                         s.add(arr[j]);
                     }
                 }
-                result.sort((Set<E> o1, Set<E> o2) -> o1.size() - o2.size());
                 result.add(s);
             }
             return result;
